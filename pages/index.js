@@ -1,5 +1,10 @@
+import Nav from '../components/nav'
+
 const Home = (props) => (
-  <p>test</p>
+  <>
+    <Nav />
+    <p>test</p>
+  </>
 )
 
 export default Home

@@ -1,6 +1,18 @@
 import { Nav, Navbar, Container } from 'react-bootstrap'
+import { useRouter } from 'next/router'
+import { isLoggedIn } from '../src/user'
+import { NAV_LOGGED_IN, NAV_LOGGED_OUT } from '../src/data'
 
 function Header() {
+  const router = useRouter()
+  const loggedIn = isLoggedIn()
+
+  const navData = loggedIn ? NAV_LOGGED_IN : NAV_LOGGED_OUT
+
+  const navLinks = navData.map((item, key) => (
+    <Nav.Link href={item.href} key={key}>{item.name}</Nav.Link>
+  ))
+
   return (
     <>
       <Navbar variant="dark" bg="blue" expand="md" fixed="top">
@@ -15,12 +27,11 @@ function Header() {
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="ml-auto">
-              <Nav.Link href="#home">Home</Nav.Link>
-              <Nav.Link href="#about">About</Nav.Link>
-              <Nav.Link href="#schedule">Schedule</Nav.Link>
-              <Nav.Link href="#resources">Resources</Nav.Link>
-              <Nav.Link href="">Join</Nav.Link>
+            <Nav 
+              className="ml-auto"
+              activeKey={router.pathname}
+            >
+              {navLinks}
             </Nav>
           </Navbar.Collapse>
         </Container>
