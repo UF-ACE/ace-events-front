@@ -15,7 +15,7 @@ function Header() {
 
   return (
     <>
-      <Navbar variant="dark" bg="blue" expand="md" fixed="top">
+      <Navbar variant="dark" bg="blue" expand="md">
         <Container>
           <Navbar.Brand>
             <img
