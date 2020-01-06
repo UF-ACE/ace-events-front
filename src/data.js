@@ -20,7 +20,7 @@ export const NAV_LOGGED_IN = [
 export const NAV_LOGGED_OUT = [
   {
     name: "Login",
-    href: "/login"
+    href: "/auth/ace_cloud"
   }
 ]
 
