@@ -1,14 +1,33 @@
 import { useCookies } from "react-cookie";
+import { useState, useEffect } from "react";
 
 const USER_NAME = 'USER_NAME'
 const USER_EMAIL = 'USER_EMAIL'
 const USER_ROLE = 'USER_ROLE'
 
-export function handleLoggedIn() {
+export function useUser() {
+  const [loggedIn, setLoggedIn] = useState(false)
+  const [user, setUser] = useState({})
+  const [cookies, setCookie] = useCookies()
+  const [checked, setChecked] = useState(false)
+
+  useEffect(() => {
+    if (!checked) {
+      handleLoggedIn(cookies, setCookie).then((isLoggedIn) => {
+        const foundUser = getUser(cookies)
+        setLoggedIn(isLoggedIn)
+        setUser(foundUser)
+        setChecked(true)
+      })
+    }
+  })
+
+  return [loggedIn, user]
+}
+
+function handleLoggedIn(cookies, setCookie) {
   return new Promise((resolve, reject) => {
-    const [cookies, setCookie] = useCookies()
     if (!cookies[USER_NAME] || cookies[USER_NAME] == "undefined") {
-      console.log("Fetching data...")
       fetch('http://localhost/api/get_user.json').then(res => {
         if (res.status == 403) {
           resolve(false)
@@ -29,8 +48,14 @@ export function handleLoggedIn() {
   })
 }
 
-export function loggedIn(name, email, role) {
-  
+function getUser(cookies) {
+  return {
+    name: cookies[USER_NAME],
+    email: cookies[USER_EMAIL],
+    role: cookies[USER_ROLE],
+    isChair: cookies[USER_ROLE] > 0,
+    isEBoard: cookies[USER_ROLE] > 1
+  }
 }
 
 export function logout() {
