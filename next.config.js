@@ -7,8 +7,8 @@ const withOffline = require('next-offline')
 
 module.exports = withPlugins(
   [
-    [sass, {}],
     [css, {}],
+    [sass, {}],
     [optimizedImages, {
       handleImages: ['jpeg', 'png'],
       optimizeImages: true

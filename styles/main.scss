@@ -61,3 +61,24 @@ body {
   width: 100%;
   color: white;
 }
+
+.MuiOutlinedInput-input {
+  padding: 0.375rem 0.75rem !important;
+  line-height: 1.5 !important;
+  height: 100% !important;
+}
+
+.MuiFormControl-root {
+  display: block !important;
+  width: 100% !important;
+  background-color:#fff;
+  height: calc(1.5em + 0.75rem + 2px) !important;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  box-sizing: border-box;
+}
+
+.MuiInputBase-root {
+  display: block !important;
+}
