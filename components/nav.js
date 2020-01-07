@@ -3,9 +3,9 @@ import { useRouter } from 'next/router'
 import { isLoggedIn } from '../src/user'
 import { NAV_LOGGED_IN, NAV_LOGGED_OUT } from '../src/data'
 
-function Header() {
+function Header(props) {
   const router = useRouter()
-  const loggedIn = isLoggedIn()
+  const loggedIn = props.loggedIn
 
   const navData = loggedIn ? NAV_LOGGED_IN : NAV_LOGGED_OUT
 
