@@ -22,6 +22,9 @@ const EventNew = (props) => {
   const [placeHolderLocation] = useState(placeholders.location)
   const [formData, setFormData] = useState({ start_time: new Date(), end_time: new Date()})
 
+  const [loading, setLoading] = useState(false)
+  const [errors, setErrors] = useState({})
+
   const handleOnChange = (field, val) => {
     let data = {...formData}
     data[field] = val
@@ -29,7 +32,12 @@ const EventNew = (props) => {
   }
 
   const handleSubmit = () => {
-    createEvent(formData).then(res => console.log(res))
+    setLoading(true)
+    createEvent(formData).then(({success, errors}) => {
+      setLoading(false)
+      setErrors(errors.error)
+      console.log(errors.error)
+    })
   }
 
   const theme = createMuiTheme({
@@ -41,6 +49,36 @@ const EventNew = (props) => {
     },
   })
 
+  const nameErrors = errors.name ? errors.name.map((error, index) => (
+    <Form.Text className="text-error">
+      {error}
+    </Form.Text>
+  )) : null
+
+  const descriptionErrors = errors.description ? errors.description.map((error, index) => (
+    <Form.Text className="text-error">
+      {error}
+    </Form.Text>
+  )) : null
+
+  const locationErrors = errors.location ? errors.location.map((error, index) => (
+    <Form.Text className="text-error">
+      {error}
+    </Form.Text>
+  )) : null
+
+  const startErrors = errors.start_time ? errors.start_time.map((error, index) => (
+    <Form.Text className="text-error">
+      {error}
+    </Form.Text>
+  )) : null
+
+  const endErrors = errors.end_time ? errors.end_time.map((error, index) => (
+    <Form.Text className="text-error">
+      {error}
+    </Form.Text>
+  )) : null
+
   return (
     <ThemeProvider theme={theme}>
       <MuiPickersUtilsProvider utils={MomentUtils}>
@@ -50,30 +88,35 @@ const EventNew = (props) => {
           <Form>
             <Form.Group controlId="formName">
               <Form.Label>Name</Form.Label>
-              <Form.Control type="text" placeholder={placeHolderName} onChange={(val) => handleOnChange('name', val.target.value)}  />
+              <Form.Control type="text" placeholder={placeHolderName} onChange={(val) => handleOnChange('name', val.target.value)} isInvalid={nameErrors} />
+              {nameErrors}
             </Form.Group>
 
             <Form.Group controlId="formDesc">
               <Form.Label>Description</Form.Label>
-              <Form.Control as="textarea" rows="3" placeholder="Event Description" onChange={(val) => handleOnChange('description', val.target.value)}  />
+              <Form.Control as="textarea" rows="3" placeholder="Event Description" onChange={(val) => handleOnChange('description', val.target.value)} isInvalid={descriptionErrors}  />
+              {descriptionErrors}
             </Form.Group>
 
             <Form.Group controlId="formLocation">
               <Form.Label>Location</Form.Label>
-              <Form.Control type="text" placeholder={placeHolderLocation} onChange={(val) => handleOnChange('location', val.target.value)}  />
+              <Form.Control type="text" placeholder={placeHolderLocation} onChange={(val) => handleOnChange('location', val.target.value)} isInvalid={locationErrors}  />
+              {locationErrors}
             </Form.Group>
 
             <Form.Group controlId="formStartTime">
               <Form.Label>Start Date and Time</Form.Label> <br />
-              <DateTimePicker minutesStep={10} inputVariant="outlined" value={formData.start_time} onChange={date => handleOnChange('start_time', date.toDate())}/>
+              <DateTimePicker minutesStep={10} inputVariant="outlined" value={formData.start_time} onChange={date => handleOnChange('start_time', date.toDate())} isInvalid={startErrors}/>
+              {startErrors}
             </Form.Group>
 
             <Form.Group controlId="formStartTime">
               <Form.Label>End Date and Time</Form.Label> <br />
-              <DateTimePicker minutesStep={10} inputVariant="outlined" value={formData.end_time} onChange={date => handleOnChange('end_time', date.toDate())}/>
+              <DateTimePicker minutesStep={10} inputVariant="outlined" value={formData.end_time} onChange={date => handleOnChange('end_time', date.toDate())} isInvalid={endErrors} />
+              {endErrors}
             </Form.Group>
             
-            <Button variant="primary" onClick={handleSubmit}>
+            <Button variant="primary" onClick={handleSubmit} disabled={loading}>
               Submit
             </Button>
           </Form>
