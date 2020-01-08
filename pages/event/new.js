@@ -1,6 +1,8 @@
 import Nav from '../../components/nav'
 import dynamic from 'next/dynamic'
 import { useUser } from '../../src/user.js'
+import { createEvent } from '../../src/event.js'
+
 import { Container, Form, Button, Row, Col } from 'react-bootstrap'
 import { eventPlaceHolders } from '../../src/data'
 import { useState } from 'react'
@@ -24,6 +26,10 @@ const EventNew = (props) => {
     let data = {...formData}
     data[field] = val
     setFormData(data)
+  }
+
+  const handleSubmit = () => {
+    createEvent(formData).then(res => console.log(res))
   }
 
   const theme = createMuiTheme({
@@ -67,7 +73,7 @@ const EventNew = (props) => {
               <DateTimePicker minutesStep={10} inputVariant="outlined" value={formData.end_time} onChange={date => handleOnChange('end_time', date.toDate())}/>
             </Form.Group>
             
-            <Button variant="primary" type="submit">
+            <Button variant="primary" onClick={handleSubmit}>
               Submit
             </Button>
           </Form>
