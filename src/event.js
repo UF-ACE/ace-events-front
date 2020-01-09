@@ -1,4 +1,4 @@
-
+import fetch from 'isomorphic-unfetch'
 
 export function createEvent(params) {
   return new Promise((resolve, reject) => {
@@ -13,9 +13,9 @@ export function createEvent(params) {
     fetch('http://localhost/api/events', request).then(res => {
       const success = res.status == 201
       if (!success) {
-        res.json().then(json => resolve({success, errors: json}))
+        res.json().then(json => resolve({success, location: null, errors: json}))
       } else {
-        resolve({success, errors: {error: {}}})
+        resolve({success, location: res.headers.get('location').slice(4), errors: {error: {}}})
       }
     })
   })
@@ -24,5 +24,11 @@ export function createEvent(params) {
 export function getAllEvents() {
   return new Promise((resolve, reject) => {
     fetch('http://localhost/api/events.json').then(res => res.json()).then(json => resolve(json.content))
+  })
+}
+
+export function getEvent(id) {
+  return new Promise((resolve, reject) => {
+    fetch(`http://localhost/api/events/${id}.json`).then(res => res.json()).then(json => resolve(json.content))
   })
 }

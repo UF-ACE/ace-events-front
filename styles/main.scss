@@ -82,3 +82,15 @@ body {
 .MuiInputBase-root {
   display: block !important;
 }
+
+.DraftEditor-root {
+  min-height: 5rem;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  box-sizing: border-box;
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}

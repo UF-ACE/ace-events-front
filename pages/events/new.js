@@ -1,8 +1,6 @@
 import Nav from '../../components/nav'
-import dynamic from 'next/dynamic'
 import { useUser } from '../../src/user.js'
 import { createEvent } from '../../src/event.js'
-
 import { Container, Form, Button, Row, Col } from 'react-bootstrap'
 import { eventPlaceHolders } from '../../src/data'
 import { useState } from 'react'
@@ -11,10 +9,18 @@ import {
   DateTimePicker,
   MuiPickersUtilsProvider,
 } from '@material-ui/pickers';
+import 'react-quill/dist/quill.snow.css'
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles'
+import { useRouter } from 'next/router'
+
+import dynamic from 'next/dynamic';
+import 'babel-polyfill'
+import { RichUtils } from 'draft-js';
+const NoSSREditor = dynamic(() => import('../../components/editor'), { ssr: false });
 
 const EventNew = (props) => {
   const [loggedIn, user] = useUser()
+  const router = useRouter()
 
   // Event Placeholders
   const placeholders = eventPlaceHolders()
@@ -26,6 +32,7 @@ const EventNew = (props) => {
   const [errors, setErrors] = useState({})
 
   const handleOnChange = (field, val) => {
+    console.log(val)
     let data = {...formData}
     data[field] = val
     setFormData(data)
@@ -33,10 +40,13 @@ const EventNew = (props) => {
 
   const handleSubmit = () => {
     setLoading(true)
-    createEvent(formData).then(({success, errors}) => {
+    createEvent(formData).then(({success, location, errors}) => {
       setLoading(false)
       setErrors(errors.error)
       console.log(errors.error)
+      if (success) {
+        router.push(location)
+      }
     })
   }
 
@@ -94,7 +104,11 @@ const EventNew = (props) => {
 
             <Form.Group controlId="formDesc">
               <Form.Label>Description</Form.Label>
-              <Form.Control as="textarea" rows="3" placeholder="Event Description" onChange={(val) => handleOnChange('description', val.target.value)} isInvalid={descriptionErrors}  />
+              <NoSSREditor 
+                placeholder="Description"
+                onTabEnter={() => { bodyRef.focus(); return true}}
+                onNewEditState={(htmlText) => handleOnChange('description', htmlText)}
+              />
               {descriptionErrors}
             </Form.Group>
 

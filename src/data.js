@@ -4,14 +4,6 @@ export const NAV_LOGGED_IN = [
     href: "/"
   },
   {
-    name: "Events",
-    href: "/event"
-  },
-  {
-    name: "Profile",
-    href: "/profile"
-  },
-  {
     name: "Logout",
     href: "/logout"
   }
