@@ -32,3 +32,9 @@ export function getEvent(id) {
     fetch(`http://localhost/api/events/${id}.json`).then(res => res.json()).then(json => resolve(json.content))
   })
 }
+
+export function getEventAttendees(id) {
+  return new Promise((resolve, reject) => {
+    fetch(`http://localhost/api/events/${id}/attendees.json`).then(res => res.json()).then(json => resolve(json))
+  })
+}
