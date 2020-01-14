@@ -3,7 +3,6 @@ const css = require('@zeit/next-css')
 const withPlugins = require('next-compose-plugins')
 const optimizedImages = require('next-optimized-images')
 const withFonts = require('next-fonts');
-const withOffline = require('next-offline')
 
 module.exports = withPlugins(
   [
@@ -13,8 +12,7 @@ module.exports = withPlugins(
       handleImages: ['jpeg', 'png'],
       optimizeImages: true
     }],
-    [withFonts, {}],
-    [withOffline, {}]
+    [withFonts, {}]
   ],
   {
     compress: true,
@@ -23,6 +21,9 @@ module.exports = withPlugins(
       return {
         '/': { page: '/' }
       };
+    },
+    devIndicators: {
+      autoPrerender: false,
     }
   }
 )

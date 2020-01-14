@@ -6,30 +6,34 @@ import moment from 'moment'
 import { getEvent, getEventAttendees } from '../../../src/event'
 import { useUser } from '../../../src/user'
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/router'
 
 const HtmlToReactParser = require('html-to-react').Parser
 const htmlParser = new HtmlToReactParser()
 
-const EventPage = ({ eventData, eid }) => {
+const EventPage = (props) => {
+  const router = useRouter()
   const [loggedIn, user] = useUser()
-  const [adminEventData, setAdminEventData] = useState({})
+  const [eventData, setEventData] = useState({})
   const [eventAttendees, setAttendees] = useState([])
-  const [checkingAdmin, setCheck] = useState(true)
+  const [loading, setLoading] = useState(true)
+  const eid = router.query.eid
 
-  if (checkingAdmin && loggedIn && user.isChair) {
-    getEvent(eid).then((event) => setAdminEventData(event))
-    getEventAttendees(eid).then((a) => setAttendees(a))
-    setCheck(false)
+  if (loading && eid) {
+    getEvent(eid).then((event) => setEventData(event))
+    if (user.isChair) {
+      getEventAttendees(eid).then((a) => setAttendees(a))
+    }
+    setLoading(false)
   }
 
-  
 
-  const adminInfo = adminEventData.sign_in_id ? (
+  const adminInfo = eventData.sign_in_id ? (
     <>
       <hr />
       <div>
         Sign In Link: 
-        <a href={`/sign_in/${adminEventData.sign_in_id}`}>https://uf-ace.com/sign_in/{adminEventData.sign_in_id}</a>
+        <a href={`/sign_in/${eventData.sign_in_id}`}>https://uf-ace.com/sign_in/{eventData.sign_in_id}</a>
       </div>
       <div>
         Number of Attendees: {eventAttendees ? eventAttendees.length : null}
@@ -61,14 +65,6 @@ const EventPage = ({ eventData, eid }) => {
       </Container>
     </>
   )
-}
-
-// GetInitProps to take advantage of server side rendering
-EventPage.getInitialProps = async ({ query }) => {
-  // Would request the website usually, mock for now
-  const { eid } = query
-  const data = await getEvent(eid)
-  return { eventData: data, eid }
 }
 
 export default EventPage

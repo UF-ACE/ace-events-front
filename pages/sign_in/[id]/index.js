@@ -3,16 +3,16 @@ import Nav from '../../../components/nav'
 import { signInToEvent } from '../../../src/event'
 import { useState, useEffect } from "react"
 import { Spinner } from "react-bootstrap"
-import { useRouter } from "next/router"
+import { useRouter, withRouter } from "next/router"
 
-const SignIn = ({id}) => {
-  const router = useRouter()
+const SignIn = ({ router }) => {
   const [loggedIn] = useUser()
   const [signingIn, setSigningIn] = useState(true)
   const [resErrors, setErrors] = useState({})
   const [resSuccess, setSuccess] = useState(false)
+  const id = router.query.id
 
-  if (signingIn) {
+  if (signingIn && id) {
     signInToEvent(id).then(({success, status, errors}) => {
       
       setErrors({ status, errors: errors.error})
@@ -46,10 +46,4 @@ const SignIn = ({id}) => {
   )
 }
 
-SignIn.getInitialProps = async ({ query }) => {
-  // Would request the website usually, mock for now
-  const { id } = query
-  return { id }
-}
-
-export default SignIn
+export default withRouter(SignIn)

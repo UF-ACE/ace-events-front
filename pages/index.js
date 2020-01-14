@@ -2,11 +2,17 @@ import Nav from '../components/nav'
 import { logout, useUser } from '../src/user.js'
 import { Container, Row, Col, Jumbotron, Button, Card } from 'react-bootstrap'
 import { getAllEvents } from '../src/event'
-const HtmlToReactParser = require('html-to-react').Parser
-const htmlParser = new HtmlToReactParser()
+import { useState } from 'react'
 
 const Home = (props) => {
   const [loggedIn, user] = useUser()
+  const [events, setEvents] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  if (loading) {
+    getAllEvents().then(data => setEvents(data))
+    setLoading(false)
+  }
   
   const eventWidth = user.isChair ? 9 : 12
   const adminPanel = (
@@ -20,8 +26,8 @@ const Home = (props) => {
   )
   const presentPanel = user.isChair ? adminPanel : null
 
-  const eventCards = props.allEvents.map((event, index) => (
-    <Card className='w-100 my-2'>
+  const eventCards = events.map((event, index) => (
+    <Card key={index} className='w-100 my-2'>
       <Card.Body>
         <Card.Title>{event.name}</Card.Title>
         {event.description ?
@@ -47,12 +53,6 @@ const Home = (props) => {
       </Container>
     </>
   )
-}
-
-Home.getInitialProps = async () => {
-  // Would request the website usually, mock for now
-  const data = await getAllEvents()
-  return { allEvents: data }
 }
 
 
