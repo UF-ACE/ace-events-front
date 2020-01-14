@@ -38,3 +38,21 @@ export function getEventAttendees(id) {
     fetch(`http://localhost/api/events/${id}/attendees.json`).then(res => res.json()).then(json => resolve(json))
   })
 }
+
+export function signInToEvent(signInId) {
+  return new Promise((resolve, reject) => {
+    let request = {
+      method: 'POST'
+    }
+
+    fetch(`http://localhost/api/sign_in/${signInId}`, request).then(res => {
+      const success = res.status == 201
+      if (!success) {
+        res.json().then(json => resolve({success, status: res.status, errors: json}))
+          .catch(() => resolve({success, status: res.status, errors: {error: {}}}))
+      } else {
+        resolve({success, status: res.status, errors: {error: {}}})
+      }
+    })
+  })
+}

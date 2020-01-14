@@ -22,7 +22,7 @@ const EventPage = ({ eventData, eid }) => {
     setCheck(false)
   }
 
-  console.log(eventAttendees)
+  
 
   const adminInfo = adminEventData.sign_in_id ? (
     <>

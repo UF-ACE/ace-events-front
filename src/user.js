@@ -5,6 +5,10 @@ const USER_NAME = 'USER_NAME'
 const USER_EMAIL = 'USER_EMAIL'
 const USER_ROLE = 'USER_ROLE'
 
+const OPTIONS = {
+  path: '/'
+}
+
 export function useUser() {
   const [loggedIn, setLoggedIn] = useState(false)
   const [user, setUser] = useState({})
@@ -36,9 +40,9 @@ function handleLoggedIn(cookies, setCookie) {
         }
       }).then((json) => {
         if (json) {
-          setCookie(USER_NAME, json.content.name)
-          setCookie(USER_EMAIL, json.content.email)
-          setCookie(USER_ROLE, Number(json.content.role))
+          setCookie(USER_NAME, json.content.name, OPTIONS)
+          setCookie(USER_EMAIL, json.content.email, OPTIONS)
+          setCookie(USER_ROLE, Number(json.content.role), OPTIONS)
           resolve(true)
         }
       })
@@ -58,9 +62,8 @@ function getUser(cookies) {
   }
 }
 
-export function logout() {
-  const [cookies, setCookie, removeCookie] = useCookies()
-  removeCookie(USER_NAME)
-  removeCookie(USER_EMAIL)
-  removeCookie(USER_ROLE)
+export function logout(removeCookie) {
+  removeCookie(USER_NAME, OPTIONS)
+  removeCookie(USER_EMAIL, OPTIONS)
+  removeCookie(USER_ROLE, OPTIONS)
 }

@@ -32,7 +32,7 @@ const EventNew = (props) => {
   const [errors, setErrors] = useState({})
 
   const handleOnChange = (field, val) => {
-    console.log(val)
+    
     let data = {...formData}
     data[field] = val
     setFormData(data)
@@ -43,7 +43,7 @@ const EventNew = (props) => {
     createEvent(formData).then(({success, location, errors}) => {
       setLoading(false)
       setErrors(errors.error)
-      console.log(errors.error)
+      
       if (success) {
         router.push(location)
       }

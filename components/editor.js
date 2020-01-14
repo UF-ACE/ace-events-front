@@ -8,7 +8,7 @@ const NoSSREditor = (props) => {
   const [editor, setEditState] = useState(EditorState.createEmpty())
 
   const inlineStyleModifier = (type) => {
-    console.log('called')
+    
     setEditState(RichUtils.toggleInlineStyle(editor, type))
     props.onNewEditState(stateToHTML(newState.getCurrentContent()))
   }
@@ -20,7 +20,7 @@ const NoSSREditor = (props) => {
     const newState = RichUtils.handleKeyCommand(editorState, command)
     if (newState) {
       setEditState(newState)
-      console.log(newState.getCurrentContent())
+      
       props.onNewEditState(stateToHTML(newState.getCurrentContent()))
       return 'handled'
     }
