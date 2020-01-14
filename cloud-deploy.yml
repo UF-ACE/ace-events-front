@@ -1,10 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: home
+  name: event-front
   namespace: ace-official
   labels:
-    app: home
+    app: event
+    tier: frontend
     service: web
 spec:
   replicas: 2
@@ -39,10 +40,47 @@ spec:
               exec:
                 command: ["/usr/sbin/nginx","-s","quit"]
 ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: home
+  namespace: ace-official
+  labels:
+    app: home
+    service: web
+spec:
+  replicas: 2
+  revisionHistoryLimit: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: home
+  template:
+    metadata:
+      labels:
+        app: home
+        service: web
+    spec:
+      containers:
+        - name: home
+          image: quay.io/uface/event-back:0.1.0
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 3
+            periodSeconds: 3
+---
 apiVersion: v1
 kind: Service
 metadata:
-  name: home
+  name: event-front
   namespace: ace-official
   labels:
     service: web
@@ -53,12 +91,13 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app: home
+    app: event
+    tier: frontend
 ---
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: home
+  name: event
   namespace: ace-official
   labels:
     service: web
@@ -75,14 +114,30 @@ spec:
     - host: uf-ace.com
       http:
         paths:
-          - path: /
+          - path: /events/
             backend:
-              serviceName: home
+              serviceName: event-front
               servicePort: 80
+          - path: /events/auth
+            backend:
+              serviceName: event-back
+              servicePort: 80
+          - path: /events/api
+              backend:
+                serviceName: event-back
+                servicePort: 80
     - host: www.uf-ace.com
       http:
         paths:
-          - path: /
+          - path: /events/
             backend:
-              serviceName: home
+              serviceName: event-front
               servicePort: 80
+          - path: /events/auth
+            backend:
+              serviceName: event-back
+              servicePort: 80
+          - path: /events/api
+              backend:
+                serviceName: event-back
+                servicePort: 80
