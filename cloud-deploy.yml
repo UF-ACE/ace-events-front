@@ -26,7 +26,7 @@ spec:
     spec:
       containers:
         - name: events-front
-          image: quay.io/uface/events-front:0.6.0
+          image: quay.io/uface/events-front:0.6.1
           ports:
             - containerPort: 3000
               protocol: TCP
@@ -59,7 +59,7 @@ spec:
     spec:
       containers:
         - name: events-back
-          image: quay.io/uface/events-back:0.2.1
+          image: quay.io/uface/events-back:0.2.2
           ports:
             - containerPort: 8080
               protocol: TCP
@@ -97,7 +97,7 @@ spec:
               value: https://events.uf-ace.com/auth/ace_cloud/callback
       initContainers:
         - name: events-db-init
-          image: quay.io/uface/events-back:0.2.1
+          image: quay.io/uface/events-back:0.2.2
           command: ["rails", "db:prepare"]
           env:
             - name: PG_HOST

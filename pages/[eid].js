@@ -21,9 +21,7 @@ const EventPage = (props) => {
 
   if (loading && eid) {
     getEvent(eid).then((event) => setEventData(event))
-    if (user.isChair) {
-      getEventAttendees(eid).then((a) => setAttendees(a))
-    }
+    getEventAttendees(eid).then((a) => setAttendees(a))
     setLoading(false)
   }
 

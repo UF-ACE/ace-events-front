@@ -15,7 +15,7 @@ export function createEvent(params) {
       if (!success) {
         res.json().then(json => resolve({success, location: null, errors: json}))
       } else {
-        resolve({success, location: res.headers.get('location').slice(4), errors: {error: {}}})
+        resolve({success, location: res.headers.get('location').slice(11), errors: {error: {}}})
       }
     })
   })
