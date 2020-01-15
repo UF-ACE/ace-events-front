@@ -20,7 +20,7 @@ const Home = (props) => {
       <Jumbotron className="my-0 py-4">
         <h4>Admin Panel</h4>
         <hr />
-        <Button block href='/events/new'>Create Event</Button>
+        <Button block href='/new'>Create Event</Button>
       </Jumbotron>
     </Col>
   )
@@ -34,7 +34,7 @@ const Home = (props) => {
         <Card.Text>
           {`${event.description.replace(/<\/?\w+>/g, "").slice(0, 200)}...`}
         </Card.Text> : null }
-        <Card.Link href={`/events/${event.id}`}>View</Card.Link>
+        <Card.Link href={`/${event.id}`}>View</Card.Link>
       </Card.Body>
     </Card>
   ))

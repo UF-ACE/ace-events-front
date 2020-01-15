@@ -1,8 +1,8 @@
-import Nav from '../../components/nav'
-import { useUser } from '../../src/user.js'
-import { createEvent } from '../../src/event.js'
+import Nav from '../components/nav'
+import { useUser } from '../src/user.js'
+import { createEvent } from '../src/event.js'
 import { Container, Form, Button } from 'react-bootstrap'
-import { eventPlaceHolders } from '../../src/data'
+import { eventPlaceHolders } from '../src/data'
 import { useState } from 'react'
 import MomentUtils from '@date-io/moment';
 import {
@@ -15,7 +15,7 @@ import { useRouter } from 'next/router'
 
 import dynamic from 'next/dynamic';
 import 'babel-polyfill'
-const NoSSREditor = dynamic(() => import('../../components/editor'), { ssr: false });
+const NoSSREditor = dynamic(() => import('../components/editor'), { ssr: false });
 
 const EventNew = (props) => {
   const [loggedIn] = useUser()

@@ -1,10 +1,10 @@
-import Nav from '../../../components/nav'
+import Nav from '../components/nav'
 import { Container, Row, Col, Jumbotron } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClock, faMapMarkerAlt, faMap } from '@fortawesome/free-solid-svg-icons'
 import moment from 'moment'
-import { getEvent, getEventAttendees } from '../../../src/event'
-import { useUser } from '../../../src/user'
+import { getEvent, getEventAttendees } from '../src/event'
+import { useUser } from '../src/user'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 
