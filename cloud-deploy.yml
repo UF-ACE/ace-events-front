@@ -16,16 +16,17 @@ spec:
       maxUnavailable: 1
   selector:
     matchLabels:
-      app: home
+      app: events-front
   template:
     metadata:
       labels:
-        app: home
+        app: events-front
+        tier: frontend
         service: web
     spec:
       containers:
         - name: events-front
-          image: quay.io/uface/event-front:0.1.0
+          image: quay.io/uface/events-front:0.2.0
           ports:
             - containerPort: 80
               protocol: TCP
@@ -58,65 +59,53 @@ spec:
       maxUnavailable: 1
   selector:
     matchLabels:
-      app: home
+      app: events-back
   template:
     metadata:
       labels:
-        app: home
+        app: events-back
+        tier: backend
         service: web
     spec:
       containers:
         - name: events-back
-          image: quay.io/uface/event-back:0.1.0
+          image: quay.io/uface/events-back:0.1.0
           ports:
             - containerPort: 8080
               protocol: TCP
           env:
             - name: PG_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: events
-                  key: host
+              value: event-db
             - name: PG_DATABASE
-              valueFrom:
-                secretKeyRef:
-                  name: events
-                  key: database
+              value: events
             - name: PG_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: events
-                  key: username
+                  name: event-db-auth
+                  key: POSTGRES_USER
             - name: PG_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: events
-                  key: password
+                  name: event-db-auth
+                  key: POSTGRES_PASSWORD
       initContainers:
         - name: events-db-init
-          image: quay.io/uface/event-db-init:0.1.0
+          image: quay.io/uface/events-db-init:0.1.0
           env:
             - name: PG_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: events
-                  key: host
+              value: event-db
             - name: PG_DATABASE
-              valueFrom:
-                secretKeyRef:
-                  name: events
-                  key: database
+              value: events
             - name: PG_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: events
-                  key: username
+                  name: event-db-auth
+                  key: POSTGRES_USER
             - name: PG_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: events
-                  key: password
-          
+                  name: event-db-auth
+                  key: POSTGRES_PASSWORD       
 ---
 apiVersion: v1
 kind: Service
@@ -132,8 +121,7 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app: events
-    tier: frontend
+    app: events-front
 ---
 apiVersion: v1
 kind: Service
@@ -144,13 +132,12 @@ metadata:
     service: web
 spec:
   ports:
-    - port: 8080
-      targetPort: 80
+    - port: 80
+      targetPort: 8080
       protocol: TCP
       name: http
   selector:
-    app: events
-    tier: backend
+    app: events-back
 ---
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
@@ -181,9 +168,9 @@ spec:
               serviceName: events-back
               servicePort: 80
           - path: /events/api
-              backend:
-                serviceName: events-back
-                servicePort: 80
+            backend:
+              serviceName: events-back
+              servicePort: 80
     - host: www.uf-ace.com
       http:
         paths:
@@ -196,6 +183,6 @@ spec:
               serviceName: events-back
               servicePort: 80
           - path: /events/api
-              backend:
-                serviceName: events-back
-                servicePort: 80
+            backend:
+              serviceName: events-back
+              servicePort: 80

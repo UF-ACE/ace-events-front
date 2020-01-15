@@ -20,4 +20,6 @@ FROM nginx:1.17.5-alpine
 
 COPY --from=builder /app/nginx.conf /etc/nginx/nginx.conf
 
-COPY --from=builder /app/out/ /usr/share/nginx/html/
+RUN mkdir /usr/share/nginx/html/events/
+
+COPY --from=builder /app/out/ /usr/share/nginx/html/events/
