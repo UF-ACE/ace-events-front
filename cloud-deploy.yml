@@ -26,7 +26,7 @@ spec:
     spec:
       containers:
         - name: events-front
-          image: quay.io/uface/events-front:0.3.0
+          image: quay.io/uface/events-front:0.4.0
           ports:
             - containerPort: 80
               protocol: TCP
@@ -162,37 +162,21 @@ metadata:
 spec:
   tls:
     - hosts:
-        - uf-ace.com
-        - www.uf-ace.com
-      secretName: home-tls
+        - events.uf-ace.com
+      secretName: events-tls
   rules:
-    - host: uf-ace.com
+    - host: events.uf-ace.com
       http:
         paths:
-          - path: /events/
+          - path: /
             backend:
               serviceName: events-front
               servicePort: 80
-          - path: /events/auth
+          - path: /auth
             backend:
               serviceName: events-back
               servicePort: 80
-          - path: /events/api
-            backend:
-              serviceName: events-back
-              servicePort: 80
-    - host: www.uf-ace.com
-      http:
-        paths:
-          - path: /events/
-            backend:
-              serviceName: events-front
-              servicePort: 80
-          - path: /events/auth
-            backend:
-              serviceName: events-back
-              servicePort: 80
-          - path: /events/api
+          - path: /api
             backend:
               serviceName: events-back
               servicePort: 80
