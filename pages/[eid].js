@@ -39,8 +39,8 @@ const EventPage = (props) => {
     </>
   ) : null
 
-  const startTime = moment(eventData.beginDateTime).format('ddd. MMMM Do h:mm a')
-  const endTime = moment(eventData.endDateTime).format('h:mm a')
+  const startTime = moment(eventData.start_time).format('ddd. MMMM Do h:mm a')
+  const endTime = moment(eventData.end_time).format('h:mm a')
   return (
     <>
       <Nav loggedIn={loggedIn} />
