@@ -32,7 +32,7 @@ export function useUser() {
 function handleLoggedIn(cookies, setCookie) {
   return new Promise((resolve, reject) => {
     if (!cookies[USER_NAME] || cookies[USER_NAME] == "undefined") {
-      fetch('http://localhost/api/get_user.json').then(res => {
+      fetch('/api/get_user.json').then(res => {
         if (res.status == 403) {
           resolve(false)
         } else {

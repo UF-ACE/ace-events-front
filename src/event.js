@@ -10,7 +10,7 @@ export function createEvent(params) {
       body: JSON.stringify({event: params})
     }
 
-    fetch('http://localhost/api/events', request).then(res => {
+    fetch('/api/events', request).then(res => {
       const success = res.status == 201
       if (!success) {
         res.json().then(json => resolve({success, location: null, errors: json}))
@@ -23,19 +23,19 @@ export function createEvent(params) {
 
 export function getAllEvents() {
   return new Promise((resolve, reject) => {
-    fetch('http://localhost/api/events.json').then(res => res.json()).then(json => resolve(json.content))
+    fetch('/api/events.json').then(res => res.json()).then(json => resolve(json.content))
   })
 }
 
 export function getEvent(id) {
   return new Promise((resolve, reject) => {
-    fetch(`http://localhost/api/events/${id}.json`).then(res => res.json()).then(json => resolve(json.content))
+    fetch(`/api/events/${id}.json`).then(res => res.json()).then(json => resolve(json.content))
   })
 }
 
 export function getEventAttendees(id) {
   return new Promise((resolve, reject) => {
-    fetch(`http://localhost/api/events/${id}/attendees.json`).then(res => res.json()).then(json => resolve(json))
+    fetch(`/api/events/${id}/attendees.json`).then(res => res.json()).then(json => resolve(json))
   })
 }
 
@@ -45,7 +45,7 @@ export function signInToEvent(signInId) {
       method: 'POST'
     }
 
-    fetch(`http://localhost/api/sign_in/${signInId}`, request).then(res => {
+    fetch(`/api/sign_in/${signInId}`, request).then(res => {
       const success = res.status == 201
       if (!success) {
         res.json().then(json => resolve({success, status: res.status, errors: json}))

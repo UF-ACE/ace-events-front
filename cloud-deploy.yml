@@ -69,7 +69,7 @@ spec:
     spec:
       containers:
         - name: events-back
-          image: quay.io/uface/events-back:0.1.0
+          image: quay.io/uface/events-back:0.2.1
           ports:
             - containerPort: 8080
               protocol: TCP
@@ -93,9 +93,22 @@ spec:
                 secretKeyRef:
                   name: events-back
                   key: SECRET_KEY_BASE
+            - name: OP_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: events-back
+                  key: OP_CLIENT_ID
+            - name: OP_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: events-back
+                  key: OP_SECRET_KEY
+            - name: OP_REDIRECT_URI
+              value: https://events.uf-ace.com/auth/ace_cloud/callback
       initContainers:
         - name: events-db-init
-          image: quay.io/uface/events-db-init:0.1.0
+          image: quay.io/uface/events-back:0.2.1
+          command: ["rails", "db:prepare"]
           env:
             - name: PG_HOST
               value: event-db
@@ -116,6 +129,18 @@ spec:
                 secretKeyRef:
                   name: events-back
                   key: SECRET_KEY_BASE
+            - name: OP_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: events-back
+                  key: OP_CLIENT_ID
+            - name: OP_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: events-back
+                  key: OP_SECRET_KEY
+            - name: OP_REDIRECT_URI
+              value: https://events.uf-ace.com/auth/ace_cloud/callback
 ---
 apiVersion: v1
 kind: Service
