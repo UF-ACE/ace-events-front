@@ -17,12 +17,18 @@ export function useUser() {
 
   useEffect(() => {
     if (!checked) {
-      handleLoggedIn(cookies, setCookie).then((isLoggedIn) => {
-        const foundUser = getUser(cookies)
-        setLoggedIn(isLoggedIn)
+      handleLoggedIn(cookies, setCookie).then(({success, json}) => {
+        let foundUser = {}
+        if (json[USER_NAME]) {
+          foundUser = getUser(json)
+        } else {
+          foundUser = getUser(cookies)
+        }
+        setLoggedIn(success)
         setUser(foundUser)
         setChecked(true)
       })
+      setChecked(true)
     }
   })
 
@@ -34,20 +40,25 @@ function handleLoggedIn(cookies, setCookie) {
     if (!cookies[USER_NAME] || cookies[USER_NAME] == "undefined") {
       fetch('/api/get_user.json').then(res => {
         if (res.status == 403) {
-          resolve(false)
+          resolve({success: false, json: {}})
         } else {
           return res.json()
         }
       }).then((json) => {
         if (json) {
+          console.log(json)
           setCookie(USER_NAME, json.content.name, OPTIONS)
           setCookie(USER_EMAIL, json.content.email, OPTIONS)
           setCookie(USER_ROLE, Number(json.content.role), OPTIONS)
-          resolve(true)
+          resolve({success: true, json: {
+            USER_NAME: json.content.name,
+            USER_EMAIL: json.content.email,
+            USER_ROLE: Number(json.content.role)
+          }})
         }
       })
     } else {
-      resolve(true)
+      resolve({success: true, json: {}})
     }
   })
 }

@@ -9,6 +9,8 @@ const Home = (props) => {
   const [events, setEvents] = useState([])
   const [loading, setLoading] = useState(true)
 
+  console.log(user)
+
   if (loading) {
     getAllEvents().then(data => setEvents(data))
     setLoading(false)
