@@ -32,7 +32,7 @@ const Home = (props) => {
         <Card.Title>{event.name}</Card.Title>
         {event.description ?
         <Card.Text>
-          {`${event.description.replace(/<\/?\w+>/g, "").slice(0, 200)}...`}
+          {`${event.description.replace(/<\/?\w+>/g, "").replace('&nbsp;', '').slice(0, 200)}...`}
         </Card.Text> : null }
         <Card.Link href={`/${event.id}`}>View</Card.Link>
       </Card.Body>
