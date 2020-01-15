@@ -16,8 +16,6 @@ RUN yarn build
 
 FROM node:erbium-slim
 
-RUN npm i -g next
-
 WORKDIR /app
 
 ADD package.json . 
