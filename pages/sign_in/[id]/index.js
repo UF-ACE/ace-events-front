@@ -22,7 +22,7 @@ const SignIn = ({ router }) => {
   }
 
   if (!signingIn && resErrors.status == 403) {
-    router.push('/auth/ace_cloud')
+    window.location.pathname = '/auth/ace_cloud'
   }
 
   const signInElements = (

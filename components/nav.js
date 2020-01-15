@@ -15,7 +15,7 @@ function Header(props) {
     if (item.preHref) {
       item.preHref(removeCookie)
     }
-    router.push(item.href)
+    window.location.pathname = item.href
   }
 
   const navLinks = navData.map((item, key) => (
