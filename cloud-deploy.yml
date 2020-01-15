@@ -1,10 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: event-front
+  name: events-front
   namespace: ace-official
   labels:
-    app: event
+    app: events
     tier: frontend
     service: web
 spec:
@@ -24,7 +24,7 @@ spec:
         service: web
     spec:
       containers:
-        - name: home
+        - name: events-front
           image: quay.io/uface/event-front:0.1.0
           ports:
             - containerPort: 80
@@ -43,13 +43,14 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: home
+  name: events-back
   namespace: ace-official
   labels:
-    app: home
+    app: events
+    tier: backend
     service: web
 spec:
-  replicas: 2
+  replicas: 1
   revisionHistoryLimit: 2
   strategy:
     type: RollingUpdate
@@ -65,22 +66,62 @@ spec:
         service: web
     spec:
       containers:
-        - name: home
+        - name: events-back
           image: quay.io/uface/event-back:0.1.0
           ports:
-            - containerPort: 80
+            - containerPort: 8080
               protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: 80
-            initialDelaySeconds: 3
-            periodSeconds: 3
+          env:
+            - name: PG_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: events
+                  key: host
+            - name: PG_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: events
+                  key: database
+            - name: PG_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: events
+                  key: username
+            - name: PG_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: events
+                  key: password
+      initContainers:
+        - name: events-db-init
+          image: quay.io/uface/event-db-init:0.1.0
+          env:
+            - name: PG_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: events
+                  key: host
+            - name: PG_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: events
+                  key: database
+            - name: PG_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: events
+                  key: username
+            - name: PG_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: events
+                  key: password
+          
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: event-front
+  name: events-front
   namespace: ace-official
   labels:
     service: web
@@ -91,13 +132,30 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app: event
+    app: events
     tier: frontend
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: events-back
+  namespace: ace-official
+  labels:
+    service: web
+spec:
+  ports:
+    - port: 8080
+      targetPort: 80
+      protocol: TCP
+      name: http
+  selector:
+    app: events
+    tier: backend
 ---
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: event
+  name: events
   namespace: ace-official
   labels:
     service: web
@@ -116,28 +174,28 @@ spec:
         paths:
           - path: /events/
             backend:
-              serviceName: event-front
+              serviceName: events-front
               servicePort: 80
           - path: /events/auth
             backend:
-              serviceName: event-back
+              serviceName: events-back
               servicePort: 80
           - path: /events/api
               backend:
-                serviceName: event-back
+                serviceName: events-back
                 servicePort: 80
     - host: www.uf-ace.com
       http:
         paths:
           - path: /events/
             backend:
-              serviceName: event-front
+              serviceName: events-front
               servicePort: 80
           - path: /events/auth
             backend:
-              serviceName: event-back
+              serviceName: events-back
               servicePort: 80
           - path: /events/api
               backend:
-                serviceName: event-back
+                serviceName: events-back
                 servicePort: 80
