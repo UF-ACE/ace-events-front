@@ -46,7 +46,6 @@ function handleLoggedIn(cookies, setCookie) {
         }
       }).then((json) => {
         if (json) {
-          console.log(json)
           setCookie(USER_NAME, json.content.name, OPTIONS)
           setCookie(USER_EMAIL, json.content.email, OPTIONS)
           setCookie(USER_ROLE, Number(json.content.role), OPTIONS)

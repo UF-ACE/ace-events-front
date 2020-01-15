@@ -8,14 +8,14 @@ function Header(props) {
   const [cookies, setCookie, removeCookie] = useCookies()
   const loggedIn = props.loggedIn
 
-  const navData = loggedIn ? NAV_LOGGED_IN : NAV_LOGGED_OUT
+  const navData = loggedIn ? NAV_LOGGED_IN : NAV_LOGGED_OUT(router.asPath)
 
   const onLinkPress = eventKey => {
     const item = navData[eventKey]
     if (item.preHref) {
       item.preHref(removeCookie)
     }
-    window.location.pathname = item.href
+    router.push(item.href)
   }
 
   const navLinks = navData.map((item, key) => (
