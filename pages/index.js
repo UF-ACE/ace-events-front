@@ -1,8 +1,13 @@
+import { config } from '@fortawesome/fontawesome-svg-core'
+import '@fortawesome/fontawesome-svg-core/styles.css' // Import the CSS
+config.autoAddCss = false
+import '../styles/main.scss'
+
 import Nav from '../components/nav'
 import { logout, useUser } from '../src/user.js'
 import { Container, Row, Col, Jumbotron, Button, Card } from 'react-bootstrap'
 import { getAllEvents } from '../src/event'
-import { useState } from 'react'
+import React, { useState } from 'react'
 
 const Home = (props) => {
   const [loggedIn, user] = useUser()

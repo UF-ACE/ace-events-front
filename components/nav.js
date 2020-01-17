@@ -1,21 +1,19 @@
 import { Nav, Navbar, Container } from 'react-bootstrap'
-import { useRouter } from 'next/router'
 import { NAV_LOGGED_IN, NAV_LOGGED_OUT } from '../src/data'
 import { useCookies } from 'react-cookie'
 
 function Header(props) {
-  const router = useRouter()
   const [cookies, setCookie, removeCookie] = useCookies()
   const loggedIn = props.loggedIn
 
-  const navData = loggedIn ? NAV_LOGGED_IN : NAV_LOGGED_OUT(router.asPath)
+  const navData = loggedIn ? NAV_LOGGED_IN : NAV_LOGGED_OUT(window.location.href)
 
   const onLinkPress = eventKey => {
     const item = navData[eventKey]
     if (item.preHref) {
       item.preHref(removeCookie)
     }
-    router.push(item.href)
+    window.location.href = item.href
   }
 
   const navLinks = navData.map((item, key) => (
