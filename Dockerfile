@@ -6,6 +6,8 @@ ADD package.json .
 ADD yarn.lock . 
 RUN yarn install
 
+ENV NODE_ENV production
+
 ADD . .
 RUN yarn build
 

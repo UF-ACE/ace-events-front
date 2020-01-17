@@ -28,8 +28,7 @@ module.exports = {
     new WorkboxPlugin.GenerateSW({
       clientsClaim: true,
       skipWaiting: true
-    }),
-    new Visualizer()
+    })
   ],
   module: {
     rules: [
@@ -44,7 +43,7 @@ module.exports = {
           },
           { loader: 'css-loader', options: { importLoaders: 1 } },
           'postcss-loader',
-          { loader: 'sass-loader' }
+          'sass-loader'
         ],
       },
       {

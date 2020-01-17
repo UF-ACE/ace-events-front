@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
-  "sideEffects": false,
+  "sideEffects": [
+    "*.css",
+    "*.scss"
+  ],
   "dependencies": {
     "@date-io/moment": "1.3.13",
     "@fortawesome/fontawesome-svg-core": "^1.2.26",
