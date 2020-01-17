@@ -1,3 +1,4 @@
+import React from 'react'
 import 'babel-polyfill'
 import '../styles/draft.css'
 import { useState } from 'react'

@@ -1,8 +1,9 @@
-import Nav from '../components/nav'
-import { logout, useUser } from '../src/user.js'
+import React from 'react';
+
 import { Container, Row, Col, Jumbotron, Button, Card } from 'react-bootstrap'
 import { getAllEvents } from '../src/event'
 import { useState } from 'react'
+import { useUser } from '../src/user';
 
 const Home = (props) => {
   const [loggedIn, user] = useUser()
@@ -41,7 +42,6 @@ const Home = (props) => {
 
   return (
     <>
-      <Nav loggedIn={loggedIn} />
       <Container className='mt-4'>
         <Row>
           {presentPanel}
