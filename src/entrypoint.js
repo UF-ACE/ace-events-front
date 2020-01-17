@@ -3,10 +3,6 @@ import ReactDOM from 'react-dom'
 import Nav from '../components/nav'
 
 import loadable from '@loadable/component'
-
-import { config } from '@fortawesome/fontawesome-svg-core'
-import '@fortawesome/fontawesome-svg-core/styles.css' // Import the CSS
-config.autoAddCss = false
 import '../styles/main.scss'
 
 import {
@@ -21,6 +17,16 @@ const Index = loadable(() => import('../pages/index'))
 const New = loadable(() => import('../pages/new'))
 const Event = loadable(() => import('../pages/event'))
 const SignIn = loadable(() => import('../pages/signIn'))
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js').then(registration => {
+      console.log('SW registered: ', registration);
+    }).catch(registrationError => {
+      console.log('SW registration failed: ', registrationError);
+    });
+  });
+}
 
 const App = () => {
   const [loggedIn] = useUser()
