@@ -4,6 +4,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin')
 const WorkboxPlugin = require('workbox-webpack-plugin');
+const Visualizer = require('webpack-visualizer-plugin');
 
 module.exports = {
   entry: './src/entrypoint.js',
@@ -27,7 +28,8 @@ module.exports = {
     new WorkboxPlugin.GenerateSW({
       clientsClaim: true,
       skipWaiting: true
-    })
+    }),
+    new Visualizer()
   ],
   module: {
     rules: [
@@ -40,14 +42,23 @@ module.exports = {
               hmr: process.env.NODE_ENV === 'development',
             },
           },
-          { loader: 'css-loader', options: { sourceMap: true } },
-          { loader: 'sass-loader', options: { sourceMap: true } }
+          { loader: 'css-loader', options: { importLoaders: 1 } },
+          'postcss-loader',
+          { loader: 'sass-loader' }
         ],
       },
       {
-        test: /\.(png|svg|jpg|gif)$/,
+        test: /\.(png|svg|jpg)$/,
         use: [
-          "file-loader"
+          {
+            loader: 'responsive-loader',
+            options: {
+              adapter: require('responsive-loader/sharp'),
+              sizes: [600, 1200],
+              placeholder: true,
+              placeholderSize: 50
+            }
+          }
         ]
       },
       {
@@ -104,6 +115,7 @@ module.exports = {
   optimization: {
     moduleIds: 'hashed',
     runtimeChunk: 'single',
+    usedExports: true,
     splitChunks: {
       cacheGroups: {
         vendor: {

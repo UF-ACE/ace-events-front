@@ -1,32 +1,15 @@
-FROM node:erbium-slim as builder
+FROM node:erbium as builder
 
 WORKDIR /app
 
-ENV NODE_ENV production
-
 ADD package.json . 
-
 ADD yarn.lock . 
-
 RUN yarn install
 
 ADD . .
-
 RUN yarn build
 
-FROM node:erbium-slim
+FROM nginx:1.17-alpine
 
-WORKDIR /app
-
-ADD package.json . 
-
-COPY --from=builder /app/.next /app/.next
-
-ADD package.json . 
-
-ADD yarn.lock . 
-
-RUN yarn install
-
-CMD ["yarn", "start"]
-
+COPY --from=builder /app/out/ /usr/share/nginx/html/
+ADD nginx.conf /etc/nginx/nginx.conf
