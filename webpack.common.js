@@ -2,19 +2,23 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const FaviconsWebpackPlugin = require('favicons-webpack-plugin')
 
 module.exports = {
   entry: './src/entrypoint.js',
   output: {
     chunkFilename: '[name].[contenthash].bundle.js',
     path: path.resolve(__dirname, 'out'),
+    publicPath: '/'
   },
-  mode: 'development',
   plugins: [
-    new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      title: 'UF ACE'
+      title: 'UF ACE',
+      meta: {viewport: 'width=device-width, initial-scale=1, shrink-to-fit=no'},
+      template: './public/index.html'
     }),
+    new CleanWebpackPlugin(),
+    new FaviconsWebpackPlugin('./public/favicon.png'),
     new MiniCssExtractPlugin()
   ],
   module: {
@@ -45,8 +49,40 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-react'],
-            plugins: ["@babel/plugin-syntax-dynamic-import"]
+            presets: [
+              [
+                '@babel/preset-env',
+                {
+                  useBuiltIns: 'usage',
+                  corejs: 3
+                }
+              ],
+              [
+                '@babel/preset-react',
+                {
+                  useBuiltIns: true,
+                }
+              ]
+            ],
+            plugins: [
+              "@babel/plugin-syntax-dynamic-import",
+              [
+                '@babel/plugin-transform-runtime',
+                {
+                  "corejs": 3,
+                  "helpers": true,
+                  "regenerator": true,
+                  "useESModules": true,
+                }
+              ],
+              [
+                '@babel/plugin-proposal-object-rest-spread',
+                {
+                  useBuiltIns: true
+                }
+              ],
+              '@babel/plugin-proposal-class-properties'
+            ]
           }
         }
       }

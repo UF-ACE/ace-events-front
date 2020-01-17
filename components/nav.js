@@ -1,6 +1,9 @@
+import React from 'react';
+
 import { Nav, Navbar, Container } from 'react-bootstrap'
 import { NAV_LOGGED_IN, NAV_LOGGED_OUT } from '../src/data'
 import { useCookies } from 'react-cookie'
+import Logo from '../public/logo.png'
 
 function Header(props) {
   const [cookies, setCookie, removeCookie] = useCookies()
@@ -26,7 +29,7 @@ function Header(props) {
         <Container>
           <Navbar.Brand>
             <img
-              src={require('../public/logo.png?resize&sizes[]=70&sizes[]=140')}
+              src={Logo}
               height="30"
               alt="Logo"
               className="d-inline-block align-top"
@@ -36,7 +39,7 @@ function Header(props) {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav 
               className="ml-auto"
-              activeKey={router.pathname}
+              activeKey={window.location.pathname}
             >
               {navLinks}
             </Nav>

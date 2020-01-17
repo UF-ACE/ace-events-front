@@ -1,16 +1,15 @@
-import { useUser } from "../../../src/user"
-import Nav from '../../../components/nav'
-import { signInToEvent } from '../../../src/event'
-import { useState, useEffect } from "react"
-import { Spinner } from "react-bootstrap"
-import { useRouter, withRouter } from "next/router"
+import React, { useState, useEffect } from "react"
 
-const SignIn = ({ router }) => {
-  const [loggedIn] = useUser()
+import { useUser } from "../src/user"
+import { signInToEvent } from '../src/event'
+import { Spinner } from "react-bootstrap"
+import { useParams } from "react-router-dom"
+
+const SignIn = () => {
   const [signingIn, setSigningIn] = useState(true)
   const [resErrors, setErrors] = useState({})
   const [resSuccess, setSuccess] = useState(false)
-  const id = router.query.id
+  const { id } = useParams()
 
   if (signingIn && id) {
     signInToEvent(id).then(({success, status, errors}) => {
@@ -22,7 +21,7 @@ const SignIn = ({ router }) => {
   }
 
   if (!signingIn && resErrors.status == 403) {
-    router.push(`/auth/ace_cloud?origin=${router.asPath}`)
+    window.location.pathname = `/auth/ace_cloud?origin=${router.asPath}`
   }
 
   const signInElements = (
@@ -39,11 +38,10 @@ const SignIn = ({ router }) => {
 
   return (
     <>
-      <Nav loggedIn={loggedIn} />
       {signingIn ? signInElements : null}
       <h4 className='text-center my-2'>{resSuccess && !signingIn ? successMessage : errorMessage}</h4>
     </>
   )
 }
 
-export default withRouter(SignIn)
+export default SignIn

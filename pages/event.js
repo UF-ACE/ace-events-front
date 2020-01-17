@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react'
 import Nav from '../components/nav'
 import { Container, Row, Col, Jumbotron } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -5,19 +6,16 @@ import { faClock, faMapMarkerAlt, faMap } from '@fortawesome/free-solid-svg-icon
 import moment from 'moment'
 import { getEvent, getEventAttendees } from '../src/event'
 import { useUser } from '../src/user'
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/router'
+import { useParams } from 'react-router-dom'
 
 const HtmlToReactParser = require('html-to-react').Parser
 const htmlParser = new HtmlToReactParser()
 
 const EventPage = (props) => {
-  const router = useRouter()
-  const [loggedIn, user] = useUser()
   const [eventData, setEventData] = useState({})
   const [eventAttendees, setAttendees] = useState([])
   const [loading, setLoading] = useState(true)
-  const eid = router.query.eid
+  const { eid } = useParams()
 
   if (loading && eid) {
     getEvent(eid).then((event) => setEventData(event))
@@ -43,7 +41,6 @@ const EventPage = (props) => {
   const endTime = moment(eventData.end_time).format('h:mm a')
   return (
     <>
-      <Nav loggedIn={loggedIn} />
       <Container>
         <Jumbotron className='mt-4'>
           <h1>{eventData.name}</h1>

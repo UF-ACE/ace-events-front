@@ -1,9 +1,9 @@
+import React, { useState } from 'react'
 import Nav from '../components/nav'
 import { useUser } from '../src/user.js'
 import { createEvent } from '../src/event.js'
 import { Container, Form, Button } from 'react-bootstrap'
 import { eventPlaceHolders } from '../src/data'
-import { useState } from 'react'
 import MomentUtils from '@date-io/moment';
 import {
   DateTimePicker,
@@ -11,15 +11,11 @@ import {
 } from '@material-ui/pickers';
 import 'react-quill/dist/quill.snow.css'
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles'
-import { useRouter } from 'next/router'
 
-import dynamic from 'next/dynamic';
-import 'babel-polyfill'
-const NoSSREditor = dynamic(() => import('../components/editor'), { ssr: false });
+import Editor from '../components/editor'
 
-const EventNew = (props) => {
+const New = (props) => {
   const [loggedIn] = useUser()
-  const router = useRouter()
 
   // Event Placeholders
   const placeholders = eventPlaceHolders()
@@ -44,7 +40,7 @@ const EventNew = (props) => {
       setErrors(errors.error)
       
       if (success) {
-        router.push(location)
+        window.location.pathname = location
       }
     })
   }
@@ -89,54 +85,51 @@ const EventNew = (props) => {
   )) : null
 
   return (
-    <ThemeProvider theme={theme}>
-      <MuiPickersUtilsProvider utils={MomentUtils}>
-        <Nav loggedIn={loggedIn} />
-        <Container className='mt-4'>
-          <h1>Create a New Event</h1>
-          <Form>
-            <Form.Group controlId="formName">
-              <Form.Label>Name</Form.Label>
-              <Form.Control type="text" placeholder={placeHolderName} onChange={(val) => handleOnChange('name', val.target.value)} isInvalid={nameErrors} />
-              {nameErrors}
-            </Form.Group>
+    <MuiPickersUtilsProvider utils={MomentUtils}>
+      <Container className='mt-4'>
+        <h1>Create a New Event</h1>
+        <Form>
+          <Form.Group controlId="formName">
+            <Form.Label>Name</Form.Label>
+            <Form.Control type="text" placeholder={placeHolderName} onChange={(val) => handleOnChange('name', val.target.value)} isInvalid={nameErrors} />
+            {nameErrors}
+          </Form.Group>
 
-            <Form.Group controlId="formDesc">
-              <Form.Label>Description</Form.Label>
-              <NoSSREditor 
-                placeholder="Description"
-                onTabEnter={() => { bodyRef.focus(); return true}}
-                onNewEditState={(htmlText) => handleOnChange('description', htmlText)}
-              />
-              {descriptionErrors}
-            </Form.Group>
+          <Form.Group controlId="formDesc">
+            <Form.Label>Description</Form.Label>
+            <Editor 
+              placeholder="Description"
+              onTabEnter={() => { bodyRef.focus(); return true}}
+              onNewEditState={(htmlText) => handleOnChange('description', htmlText)}
+            />
+            {descriptionErrors}
+          </Form.Group>
 
-            <Form.Group controlId="formLocation">
-              <Form.Label>Location</Form.Label>
-              <Form.Control type="text" placeholder={placeHolderLocation} onChange={(val) => handleOnChange('location', val.target.value)} isInvalid={locationErrors}  />
-              {locationErrors}
-            </Form.Group>
+          <Form.Group controlId="formLocation">
+            <Form.Label>Location</Form.Label>
+            <Form.Control type="text" placeholder={placeHolderLocation} onChange={(val) => handleOnChange('location', val.target.value)} isInvalid={locationErrors}  />
+            {locationErrors}
+          </Form.Group>
 
-            <Form.Group controlId="formStartTime">
-              <Form.Label>Start Date and Time</Form.Label> <br />
-              <DateTimePicker minutesStep={10} inputVariant="outlined" value={formData.start_time} onChange={date => handleOnChange('start_time', date.toDate())} isInvalid={startErrors}/>
-              {startErrors}
-            </Form.Group>
+          <Form.Group controlId="formStartTime">
+            <Form.Label>Start Date and Time</Form.Label> <br />
+            <DateTimePicker minutesStep={10} inputVariant="outlined" value={formData.start_time} onChange={date => handleOnChange('start_time', date.toDate())} isInvalid={startErrors}/>
+            {startErrors}
+          </Form.Group>
 
-            <Form.Group controlId="formStartTime">
-              <Form.Label>End Date and Time</Form.Label> <br />
-              <DateTimePicker minutesStep={10} inputVariant="outlined" value={formData.end_time} onChange={date => handleOnChange('end_time', date.toDate())} isInvalid={endErrors} />
-              {endErrors}
-            </Form.Group>
-            
-            <Button variant="primary" onClick={handleSubmit} disabled={loading}>
-              Submit
-            </Button>
-          </Form>
-        </Container>
-      </MuiPickersUtilsProvider>
-    </ThemeProvider>
+          <Form.Group controlId="formStartTime">
+            <Form.Label>End Date and Time</Form.Label> <br />
+            <DateTimePicker minutesStep={10} inputVariant="outlined" value={formData.end_time} onChange={date => handleOnChange('end_time', date.toDate())} isInvalid={endErrors} />
+            {endErrors}
+          </Form.Group>
+          
+          <Button variant="primary" onClick={handleSubmit} disabled={loading}>
+            Submit
+          </Button>
+        </Form>
+      </Container>
+    </MuiPickersUtilsProvider>
   )
 }
 
-export default EventNew
+export default New
