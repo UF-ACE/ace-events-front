@@ -1,9 +1,10 @@
 const path = require('path');
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin')
-const WorkboxPlugin = require('workbox-webpack-plugin');
+const Visualizer = require('webpack-visualizer-plugin');
 
 module.exports = {
   entry: './src/entrypoint.js',
@@ -14,20 +15,18 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: 'UF ACE',
+      title: 'ACE Events',
       meta: {viewport: 'width=device-width, initial-scale=1, shrink-to-fit=no'},
       template: './public/index.html'
     }),
     new CleanWebpackPlugin(),
     new FaviconsWebpackPlugin('./public/favicon.png'),
+    new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en/),
     new MiniCssExtractPlugin({
       filename: '[name].[contenthash].css',
       chunkFilename: '[id].[contenthash].css',
     }),
-    new WorkboxPlugin.GenerateSW({
-      clientsClaim: true,
-      skipWaiting: true
-    })
+    new Visualizer()
   ],
   module: {
     rules: [
@@ -46,7 +45,7 @@ module.exports = {
         ],
       },
       {
-        test: /\.(png|svg|jpg)$/,
+        test: /\.(png|jpg)$/,
         use: [
           {
             loader: 'responsive-loader',
@@ -57,6 +56,12 @@ module.exports = {
               placeholderSize: 50
             }
           }
+        ]
+      },
+      {
+        test: /\.(svg|gif)$/,
+        use: [
+          'file-loader'
         ]
       },
       {

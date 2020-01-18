@@ -1,5 +1,5 @@
 import React from 'react'
-import 'babel-polyfill'
+import 'es6-shim'
 import '../styles/draft.css'
 import { useState } from 'react'
 import { EditorState, Editor, RichUtils, getDefaultKeyBinding } from 'draft-js'

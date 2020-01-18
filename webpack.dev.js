@@ -6,7 +6,7 @@ const Visualizer = require('webpack-visualizer-plugin');
 module.exports = merge(common, {
   mode: 'development',
   devtool: 'inline-source-map',
-  plugins: [new ErrorOverlayPlugin(), new Visualizer()],
+  plugins: [new ErrorOverlayPlugin()],
   devtool: 'cheap-module-source-map',
   devServer: {
     contentBase: './out',
