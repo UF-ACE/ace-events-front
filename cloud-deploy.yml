@@ -26,9 +26,9 @@ spec:
     spec:
       containers:
         - name: events-front
-          image: quay.io/uface/events-front:0.7.1
+          image: quay.io/uface/events-front:0.7.2
           ports:
-            - containerPort: 3000
+            - containerPort: 80
               protocol: TCP
           livenessProbe:
             httpGet:
