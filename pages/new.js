@@ -25,8 +25,6 @@ const New = (props) => {
   Moment.locale('en')
   momentLocalizer()
 
-  console.log(formData)
-
   const handleOnChange = (field, val) => {
     
     let data = {...formData}
