@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import Nav from '../components/nav'
-import { Container, Row, Col, Jumbotron } from 'react-bootstrap'
+import { Container, Row, Col, Jumbotron, Button } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClock } from '@fortawesome/free-solid-svg-icons/faClock'
-import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons/faMapMarkedAlt'
-import { faMap } from '@fortawesome/free-solid-svg-icons/faMap'
+import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons/faMapMarkerAlt'
 import moment from 'moment'
 import { getEvent, getEventAttendees } from '../src/event'
 import { useUser } from '../src/user'
@@ -30,11 +29,11 @@ const EventPage = (props) => {
     <>
       <hr />
       <div>
+        <Button block href={`/edit/${eid}`}>Edit Event</Button>
+      </div>
+      <div className='mt-2'>
         Sign In Link: 
         <a href={`/sign_in/${eventData.sign_in_id}`}>https://uf-ace.com/sign_in/{eventData.sign_in_id}</a>
-      </div>
-      <div>
-        Number of Attendees: {eventAttendees ? eventAttendees.length : null}
       </div>
     </>
   ) : null
@@ -55,6 +54,9 @@ const EventPage = (props) => {
             <Jumbotron className='mt-0'>
               <div><FontAwesomeIcon icon={faClock} /> {startTime} - {endTime}</div>
               <div><FontAwesomeIcon icon={faMapMarkerAlt} /> {eventData.location}</div>
+              <div>
+                Number of Attendees: {eventAttendees ? eventAttendees.length : null}
+              </div>
               {adminInfo}
             </Jumbotron>
           </Col>

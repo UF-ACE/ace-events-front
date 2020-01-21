@@ -14,6 +14,11 @@ const NoSSREditor = (props) => {
     props.onNewEditState(stateToHTML(newState.getCurrentContent()))
   }
 
+  if (props.loadDefault && editor != props.initValue) {
+    props.initCallback()
+    setEditState(props.initValue)
+  }
+
   if (props.styleRef)
     props.styleRef(inlineStyleModifier.bind(this))
 

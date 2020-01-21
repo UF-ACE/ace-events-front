@@ -21,7 +21,7 @@ const Home = (props) => {
       <Jumbotron className="my-0 py-4">
         <h4>Admin Panel</h4>
         <hr />
-        <Button block href='/new'>Create Event</Button>
+        <Button block href='/edit/new'>Create Event</Button>
       </Jumbotron>
     </Col>
   )

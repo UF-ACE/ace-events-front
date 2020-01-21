@@ -1,21 +1,23 @@
 import fetch from 'isomorphic-unfetch'
 
-export function createEvent(params) {
+export function createOrUpdateEvent(params, isUpdate = 'false', id = undefined) {
   return new Promise((resolve, reject) => {
     let request = {
-      method: 'POST',
+      method: isUpdate ? 'PUT' : 'PATCH',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({event: params})
     }
 
-    fetch('/api/events', request).then(res => {
-      const success = res.status == 201
+    const url = isUpdate ? `/api/events/${id}` : '/api/events'
+
+    fetch(url, request).then(res => {
+      const success = res.status == (isUpdate ? 200 : 201)
       if (!success) {
         res.json().then(json => resolve({success, location: null, errors: json}))
       } else {
-        resolve({success, location: res.headers.get('location').slice(11), errors: {error: {}}})
+        resolve({success, location: isUpdate ? '' : res.headers.get('location').slice(11), errors: {error: {}}})
       }
     })
   })

@@ -1,24 +1,49 @@
 import React, { useState } from 'react'
 import momentLocalizer from 'react-widgets-moment';
+import {EditorState, ContentState} from 'draft-js';
 import Moment from 'moment'
 import DateTimePicker from 'react-widgets/lib/DateTimePicker'
-import { createEvent } from '../src/event.js'
-import { Container, Form, Button } from 'react-bootstrap'
+import { createOrUpdateEvent, getEvent } from '../src/event.js'
+import { Container, Form, Button, Spinner } from 'react-bootstrap'
 import { eventPlaceHolders } from '../src/data'
 import 'react-quill/dist/quill.snow.css'
 import 'react-widgets/dist/css/react-widgets.css';
 
 import Editor from '../components/editor'
+import { useParams } from 'react-router-dom';
+
 
 const New = (props) => {
+  const { eid } = useParams()
+  let isNew = false
+
+  if (eid == 'new') {
+    isNew = true
+  }
+
+  const [formData, setFormData] = useState({ start_time: new Date(), end_time: new Date()})
+  const [loadingEvent, setLoadingEvent] = useState(false)
+
+  if (!isNew && !loadingEvent && !formData.name) {
+    getEvent(eid).then((event) => {
+      setFormData(event)
+      setLoadingEvent(false)
+    })
+    setLoadingEvent(true)
+  }
+
+
   // Event Placeholders
   const placeholders = eventPlaceHolders()
   const [placeHolderName] = useState(placeholders.name)
   const [placeHolderLocation] = useState(placeholders.location)
-  const [formData, setFormData] = useState({ start_time: new Date(), end_time: new Date()})
+
+  const createTitle = 'Create a New Event'
+  const editTitle = `Edit ${formData.name ? formData.name : 'a Event..'}`
 
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState({})
+  const [descInit, setDescInit] = useState(!isNew)
 
 
 
@@ -34,12 +59,16 @@ const New = (props) => {
 
   const handleSubmit = () => {
     setLoading(true)
-    createEvent(formData).then(({success, location, errors}) => {
+    createOrUpdateEvent(formData, !isNew, eid).then(({success, location, errors}) => {
       setLoading(false)
       setErrors(errors.error)
       
       if (success) {
-        window.location.pathname = location
+        if (isNew) {
+          window.location.pathname = location
+        } else {
+          window.location.pathname = `/${eid}`
+        }
       }
     })
   }
@@ -74,13 +103,21 @@ const New = (props) => {
     </Form.Text>
   )) : null
 
+  if (loadingEvent) {
+    return (
+      <Container className='mt-4'>
+        <Spinner animation="border" className="mx-auto d-flex" />
+      </Container>
+    )
+  }
+
   return (
     <Container className='mt-4'>
-      <h1>Create a New Event</h1>
+      <h1>{isNew ? createTitle : editTitle}</h1>
       <Form>
         <Form.Group controlId="formName">
           <Form.Label>Name</Form.Label>
-          <Form.Control type="text" placeholder={placeHolderName} onChange={(val) => handleOnChange('name', val.target.value)} isInvalid={nameErrors} />
+          <Form.Control type="text" placeholder={placeHolderName} value={formData.name} onChange={(val) => handleOnChange('name', val.target.value)} isInvalid={nameErrors} />
           {nameErrors}
         </Form.Group>
 
@@ -88,6 +125,9 @@ const New = (props) => {
           <Form.Label>Description</Form.Label>
           <Editor 
             placeholder="Description"
+            loadDefault={descInit && formData.description}
+            initCallback={() => setDescInit(false)}
+            initValue={EditorState.createWithContent(ContentState.createFromText(formData.description ? formData.description : ""))}
             onTabEnter={() => { bodyRef.focus(); return true}}
             onNewEditState={(htmlText) => handleOnChange('description', htmlText)}
           />
@@ -96,14 +136,14 @@ const New = (props) => {
 
         <Form.Group controlId="formLocation">
           <Form.Label>Location</Form.Label>
-          <Form.Control type="text" placeholder={placeHolderLocation} onChange={(val) => handleOnChange('location', val.target.value)} isInvalid={locationErrors}  />
+          <Form.Control type="text" placeholder={placeHolderLocation} value={formData.location} onChange={(val) => handleOnChange('location', val.target.value)} isInvalid={locationErrors}  />
           {locationErrors}
         </Form.Group>
 
         <Form.Group controlId="formStartTime">
           <Form.Label>Start Date and Time</Form.Label> <br />
           <DateTimePicker
-            defaultValue={new Date()}
+            defaultValue={Moment(formData.start_time).toDate()}
             onChange={value => handleOnChange('start_time', value)}
           />
           {startErrors}
@@ -112,7 +152,7 @@ const New = (props) => {
         <Form.Group controlId="formStartTime">
           <Form.Label>End Date and Time</Form.Label> <br />
           <DateTimePicker
-            defaultValue={new Date()}
+            defaultValue={Moment(formData.end_time).toDate()}
             onChange={value => handleOnChange('end_time', value)}
           />
           {endErrors}

@@ -17,7 +17,7 @@ import {
 import { useUser } from './user';
 
 const Index = loadable(() => import('../pages/index'))
-const New = loadable(() => import('../pages/new'))
+const New = loadable(() => import('../pages/edit'))
 const Event = loadable(() => import('../pages/event'))
 const SignIn = loadable(() => import('../pages/signIn'))
 
@@ -38,12 +38,8 @@ const App = () => {
     <Router>
       <Nav loggedIn={loggedIn} />
       <Switch>
-        <Route exact path="/new" >
-          <New />
-        </Route>
-        <Route exact path="/">
-          <Index />
-        </Route>
+        <Route exact path="/" component={Index} />
+        <Route path="/edit/:eid" component={New} />
         <Route path="/sign_in/:id" component={SignIn} />
         <Route path="/:eid" component={Event} />
       </Switch>
