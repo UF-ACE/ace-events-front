@@ -18,6 +18,16 @@ const New = loadable(() => import('../pages/new'))
 const Event = loadable(() => import('../pages/event'))
 const SignIn = loadable(() => import('../pages/signIn'))
 
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js').then(registration => {
+      console.log('SW registered: ', registration);
+    }).catch(registrationError => {
+      console.log('SW registration failed: ', registrationError);
+    });
+  });
+}
+
 const App = () => {
   const [loggedIn] = useUser()
 
