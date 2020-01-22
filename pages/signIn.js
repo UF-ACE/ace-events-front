@@ -21,7 +21,7 @@ const SignIn = () => {
   }
 
   if (!signingIn && resErrors.status == 403) {
-    window.location.pathname = `/auth/ace_cloud?origin=${router.asPath}`
+    window.location.href = `/auth/ace_cloud?origin=${window.location.pathname}`
   }
 
   const signInElements = (
