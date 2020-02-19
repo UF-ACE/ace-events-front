@@ -1,9 +1,9 @@
 import fetch from 'isomorphic-unfetch'
 
-export function createOrUpdateEvent(params, isUpdate = 'false', id = undefined) {
+export function createOrUpdateEvent(params, isUpdate = false, id = undefined) {
   return new Promise((resolve, reject) => {
     let request = {
-      method: isUpdate ? 'PUT' : 'PATCH',
+      method: isUpdate ? 'PUT' : 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -25,7 +25,7 @@ export function createOrUpdateEvent(params, isUpdate = 'false', id = undefined) 
 
 export function getAllEvents() {
   return new Promise((resolve, reject) => {
-    fetch('/api/events.json').then(res => res.json()).then(json => resolve(json.content))
+    fetch('/api/upcoming.json').then(res => res.json()).then(json => resolve(json.content))
   })
 }
 

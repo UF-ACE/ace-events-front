@@ -79,6 +79,12 @@ const New = (props) => {
     </Form.Text>
   )) : null
 
+  const shortDescriptionErrors = errors.short_description ? errors.short_description.map((error, index) => (
+    <Form.Text className="text-error">
+      {error}
+    </Form.Text>
+  )) : null
+
   const descriptionErrors = errors.description ? errors.description.map((error, index) => (
     <Form.Text className="text-error">
       {error}
@@ -119,6 +125,12 @@ const New = (props) => {
           <Form.Label>Name</Form.Label>
           <Form.Control type="text" placeholder={placeHolderName} value={formData.name} onChange={(val) => handleOnChange('name', val.target.value)} isInvalid={nameErrors} />
           {nameErrors}
+        </Form.Group>
+
+        <Form.Group controlId="formShortDesc">
+          <Form.Label>Short Description</Form.Label>
+          <Form.Control type="text" value={formData.short_description} onChange={(val) => handleOnChange('short_description', val.target.value)} isInvalid={shortDescriptionErrors} />
+          {shortDescriptionErrors}
         </Form.Group>
 
         <Form.Group controlId="formDesc">

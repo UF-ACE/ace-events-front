@@ -31,9 +31,9 @@ const Home = (props) => {
     <Card key={index} className='w-100 my-2'>
       <Card.Body>
         <Card.Title>{event.name}</Card.Title>
-        {event.description ?
+        {event.short_description ?
         <Card.Text>
-          {`${event.description.replace(/<\/?\w+>/g, "").replace('&nbsp;', '').slice(0, 200)}...`}
+          {event.short_description}
         </Card.Text> : null }
         <Card.Link href={`/${event.id}`}>View</Card.Link>
       </Card.Body>
